@@ -91,15 +91,12 @@ $trashcan = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill
 	<?php
 		include 'core.php';
 
-		$query = new Query(generate_SQL_select(["MEMBERS"], ["*"]));
-		$query->build_table(["Member ID", "Club ID", "Name", "DOB", "Gender", "Admin?"]);
-
+		$tables = ["MEMBERS"];
+		$fields = ["*"];
+		
+		$query = new Query(null, "SELECT", $tables, $fields);
+		$query->build_table(["Team ID", "Team Name", "Team Nickname"]);
 	?>
-	<div class="mt-2 col-md-12">
-		<form action="new-element.php">
-			<input type="submit" class="btn btn-outline-primary" value="Add element" />
-		</form>
-	</div>
 </body>
 
 </html>

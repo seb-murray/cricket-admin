@@ -11,7 +11,7 @@
 
     function generate_SQL_select($tables, $columns, $join_methods = null, $conditions = null)
     {
-        $sql = "SELECT " . implode(", ", $columns) . " FROM" . implode(", ", $tables);
+        $sql = "SELECT " . implode(", ", $columns) . " FROM " . implode(", ", $tables);
 
         if($join_methods != null)
         {
@@ -40,10 +40,13 @@
         private $database;
         private $connection;
         private $result;
+        private $sql;
+        private $query_all = false;
+        private $query_array;
 
-        public function __construct($sql)
+        public function __construct($query = null, $query_type = null, $tables = null, $columns = null, $join_methods = null, $conditions = null)
         {
-            if ($sql != null)
+            if ($query != null)
             {
                 $this->servername = "wyvernsite.net";
                 $this->username = "wyvernsi_sebMurray";
@@ -52,15 +55,42 @@
                 
                 $this->connection = new mysqli($this->servername, $this->username, $this->password, $this->database);
 
+                if ($this->connection->connect_error) 
+                {
+                    error(ERROR_TYPE[0], $this->connection->connect_error);
+                }
+
+                $this->result = $this->connection->query($query);
+            } 
+            else 
+            {
+                if ($query_type == "SELECT") 
+                {
+                    $this->sql = generate_SQL_select($tables, $columns, $join_methods, $conditions);
+                }
+
+                if ($columns == "*")
+                {
+                    $this->query_all = true;
+                }
+                else
+                {
+                    $this->query_array = $columns;
+                }
+
+
+                $this->servername = "wyvernsite.net";
+                $this->username = "wyvernsi_sebMurray";
+                $this->password = "L0n3someP0l3cat";
+                $this->database = "wyvernsi_sebM";
+
+                $this->connection = new mysqli($this->servername, $this->username, $this->password, $this->database);
+
                 if ($this->connection->connect_error) {
                     error(ERROR_TYPE[0], $this->connection->connect_error);
                 }
 
-                $this->result = $this->connection->query($sql);
-            }
-            else
-            {
-                error(ERROR_TYPE[0], "SQL has not been provided");
+                $this->result = $this->connection->query($this->sql);
             }
         }
 
@@ -71,34 +101,52 @@
             echo '<thead>';
             echo '<tr>';
 
+            $output = [];
+
+            if ($this->query_all != true)
+            {
+                for ($x = 0; $x <= count($this->query_array); $x++)
+                {
+                    $columns_query = new Query('SELECT column_title FROM _COLUMNS WHERE column_name = "' . $this->query_array[$x] . '"');
+                    
+                    $result = $columns_query->get_result();
+
+                    $output = array_push($output, $result->fetch_array(MYSQLI_NUM));
+
+                    echo $output;
+                }
+            }
+
             $count = 0;
 
             //Table column headings
-            if ($columns[$count] == mysqli_num_fields($this->result))
+            while ($count < count($columns))
             {
-                while ($count <= count($columns))
-                {
-                    echo '<th scope="col">' . $columns[$count] . '</th>';
-                    $count = $count + 1;
-                }
-
-                if ($button != null)
-                {
-                    echo '<th scope="col" style="background-color: white; border: none;"></th>';
-                }
-                echo '</tr>';
-                echo '</thead>';
-                echo '<tbody>';
-                while ($row = mysqli_fetch_array($this->result)) {
-                    echo "<tr>";
-                    for ($i = 0; $i < mysqli_num_fields($this->result); $i++) {
-                        echo "<td>" . $row[$i] . "</td>";
-                    }
-                    echo "</tr>";
-                }
-                echo '</tbody>';
-                echo "</table>";
+                echo '<th scope="col">' . $columns[$count] . '</th>';
+                $count = $count + 1;
             }
+
+            if ($button != null)
+            {
+                echo '<th scope="col" style="background-color: white; border: none;"></th>';
+            }
+            echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+            while ($row = mysqli_fetch_array($this->result)) {
+                echo "<tr>";
+                for ($i = 0; $i < mysqli_num_fields($this->result); $i++) {
+                    echo "<td>" . $row[$i] . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo '</tbody>';
+            echo "</table>";
+        }
+
+        public function get_result()
+        {
+            return $this->result;
         }
 
         public function __destruct()
