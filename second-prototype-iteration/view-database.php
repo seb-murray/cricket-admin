@@ -88,63 +88,13 @@ $trashcan = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill
 </head>
 
 <body>
-	<div class="mt-2 col-md-12">
-		<table class="table table-striped table-bordered">
-			<thead>
-				<tr>
-					<th scope="col">#</th>
-					<th scope="col">Name</th>
-					<th scope="col">Created</th>
-					<th scope="col">Description</th>
-					<th scope="col">Enabled</th>
-					<th scope="col" style="background-color: white; border: none;"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				$tablename = "Test_Table";
+	<?php
+		include 'core.php';
 
-				// Create connection
-				$conn = new mysqli($servername, $username, $password, $dbname);
-				// Check connection
-				if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-				}
+		$query = new Query(generate_SQL_select(["MEMBERS"], ["*"]));
+		$query->build_table(["Member ID", "Club ID", "Name", "DOB", "Gender", "Admin?"]);
 
-				//Define SQL query in $sql
-				$sql = "SELECT * FROM $tablename";
-				//Request SQL query, store the response in $result
-				$result = $conn->query($sql);
-
-				if ($result->num_rows > 0) {
-					//---------------USE AS SAMPLE CODE---------------
-					// Output data from each field in a table
-					while ($row = $result->fetch_assoc()) {
-						echo '<tr id="row_' . $row['Test_ID'] . '">';
-						//Repeat the following lines for as many regular columns as needed.
-						echo '<th scope="row">' . $row['Test_ID'] . '</th>'; //Bold  cell
-						echo '<td>' . $row['Test_Name'] . '</td>';
-						echo '<td>' . $row['Test_Created'] . '</td>'; //Regular cell
-						echo '<td>' . $row['Test_Description'] . '</td>';
-						//Following places a checkbox for a boolean value - currently cannot be changed.
-						echo '<td align="center"> <input class="form-check-input" autocomplete="off" type="checkbox" value="" id="checkbox_' . $row['Test_ID'] . '" onclick="checkboxClick()" databaseID="' . $row['Test_ID'] . '"';
-						if ($row['Test_Enabled'] == "1") {
-							echo ' checked> </td>';
-						} elseif ($row['Test_Enabled'] == "0") {
-							echo ' ></td>';
-						}
-						echo '';
-						echo '<td align="center" style="background-color: white; border: none;"> <button class="btn btn-danger"type="button"id="remove_' . $row['Test_ID'] . '" onclick="removeClick()" databaseID="' . $row['Test_ID'] . '">' . $trashcan .'</button>';
-					}
-				} else {
-					//If $result contains no fields, show '0 results'
-					echo "0 results";
-				}
-				$conn->close();
-				?>
-			</tbody>
-		</table>
-	</div>
+	?>
 	<div class="mt-2 col-md-12">
 		<form action="new-element.php">
 			<input type="submit" class="btn btn-outline-primary" value="Add element" />
