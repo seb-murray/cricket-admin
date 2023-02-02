@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-	<script>
-
-		async function update_checkbox() 
+async function update_checkbox() 
 		{
 			//Set database ID as a variable.
 			var databaseID = document.getElementById(event.srcElement.id).getAttribute("db_ID");
@@ -63,37 +57,3 @@
 			//Refresh page
 			location.reload();
 		}
-
-	</script>
-
-	<link rel="icon" type="image/x-icon" href="../favicon.ico">
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>View Database</title>
-
-	<!-- Bootstrap -->
-	<link href="../css/bootstrap-4.4.1.css" rel="stylesheet">
-</head>
-
-<body>
-	<?php
-		include 'core.php';
-
-		$fields = 
-		[
-			["member_ID", "MEMBERS"], 
-			["club_ID", "CLUBS"], 
-			["member_name", "MEMBERS"], 
-			["member_DOB", "MEMBERS"], 
-			["member_gender", "MEMBERS"], 
-			["admin", "MEMBERS"]
-		];
-
-		$query = new Query("SELECT " . implode(", ", split_2d_array($fields, 0)) . " FROM MEMBERS");
-		$query->build_table($fields, 0, 1, [5]);
-	?>
-
-</body>
-
-</html>
