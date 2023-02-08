@@ -10,8 +10,7 @@
 
     $query = new Query($sql);
 
-	//Define SQL query in $sql
-	$sql = "DELETE FROM $tablename WHERE Test_ID = '$databaseID'";
+
 	//Request SQL query, store the response in $result
     $result = $query->get_result();
 

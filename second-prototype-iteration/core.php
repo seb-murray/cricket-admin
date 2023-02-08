@@ -224,6 +224,51 @@
             echo "</table>";
         }
 
+        public function form_select_options(string $default_value, string $id, bool $hidden = null, string $on_change = null, bool $multiple = null)
+        {
+        echo '<select ';
+            if ($multiple == true)
+            {
+                echo "multiple ";
+            }
+            echo 'class="form-select" id="' . $id . '"';
+            if ($hidden == true)
+            {
+                echo ' hidden="hidden"';
+                if ($on_change != null)
+                {
+                    echo ' onchange = "' . $on_change . '">';
+                } 
+                else 
+                {
+                echo '>';
+                }
+            }
+            else
+            {
+                if ($on_change != null)
+                {
+                    echo ' onchange = "' . $on_change . '">';
+                } 
+                else 
+                {
+                echo '>';
+                }
+            }
+
+        	echo '<option>' . $default_value . '</option>';
+        	while ($row = mysqli_fetch_array($this->result)) 
+            {
+	        	for ($i = 0; $i < mysqli_num_fields($this->result); $i++)
+	        	{
+                    echo '<option value="' . $row[$i];
+                    $i++;
+                    echo '">' . $row[$i] . "</option>";
+	        	}
+	        }
+        	echo '</select>';
+        }
+
         public function get_result()
         {
             $result = [];

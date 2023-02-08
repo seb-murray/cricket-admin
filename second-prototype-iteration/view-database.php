@@ -11,26 +11,7 @@
 
 	<!-- Bootstrap -->
 	<link href="../css/bootstrap-4.4.1.css" rel="stylesheet">
-</head>
-
-<body>
-	<?php
-		include 'core.php';
-
-		$fields = 
-		[
-			["member_ID", "MEMBERS"], 
-			["club_ID", "CLUBS"], 
-			["member_name", "MEMBERS"], 
-			["member_DOB", "MEMBERS"], 
-			["member_gender", "MEMBERS"], 
-			["admin", "MEMBERS"]
-		];
-
-		$query = new Query("SELECT " . implode(", ", split_2d_array($fields, 0)) . " FROM MEMBERS");
-		$query->build_table($fields, 0, 1, [5]);
-	?>
-
+	
 	<script>
 		async function update_checkbox(event)
 		{
@@ -93,8 +74,25 @@
 			location.reload();
 		}
 	</script>
+</head>
 
+<body>
+	<?php
+		include 'core.php';
 
+		$table_fields = 
+		[
+			["member_ID", "MEMBERS"], 
+			["club_name", "CLUBS"], 
+			["member_name", "MEMBERS"], 
+			["member_DOB", "MEMBERS"], 
+			["member_gender", "MEMBERS"], 
+			["admin", "MEMBERS"]
+		];
+
+		$table_query = new Query("SELECT MEMBERS.member_ID, CLUBS.club_name, MEMBERS.member_name, MEMBERS.member_DOB, MEMBERS.member_gender, MEMBERS.admin FROM MEMBERS INNER JOIN CLUBS WHERE CLUBS.club_ID = MEMBERS.club_ID");
+		$table_query->build_table($table_fields, 0, 1, [5]);
+	?>
 </body>
 
 </html>
