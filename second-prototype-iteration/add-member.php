@@ -12,12 +12,14 @@
 
     <title>Sign up</title>
 
-    <script type="module"> 
+    <script type="module" src="../sha512\src\sha512.js"> 
 
-    import sha512 from '../sha512/package.json' assert { type: "json" };
+	//sha512\sha512.js
+
+    import sha512 from '../sha512\src\sha512.js';
 
     //Event is onChange for the select club dropdown
-    global async function select_team_from_club(event) 
+    async function select_team_from_club(event) 
     {
         //Assign HTML elements to constants for easier reading code
         const club_list = event.target;
